@@ -110,7 +110,10 @@ a:hover {
     <label for="option_d">Đáp án D:</label>
     <input id="option_d" type="text" name="option_d" required>
 
-    <label for="correct_answer">Đáp án đúng (A/B/C/D):</label>
+    <label for="option_e">Đáp án E:</label>
+    <input id="option_e" type="text" name="option_e" required>
+
+    <label for="correct_answer">Đáp án đúng (A/B/C/D/E):</label>
     <input id="correct_answer" type="text" name="correct_answer" maxlength="1" required>
 
     <button type="submit">Thêm câu hỏi</button>

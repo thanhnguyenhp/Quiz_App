@@ -156,9 +156,9 @@ button[type="submit"]:hover {
             <?php foreach ($questions as $index => $q): ?>
                 <div class="question-block <?= $index === 0 ? 'active' : '' ?>" id="question<?= $index + 1 ?>">
                     <p><strong>Câu <?= $index + 1 ?>:</strong> <?= htmlspecialchars($q['question_text']) ?></p>
-                    <?php foreach (['A', 'B', 'C', 'D'] as $opt): ?>
+                    <?php foreach (['A', 'B', 'C', 'D','E'] as $opt): ?>
                         <label>
-                            <input type="radio" name="answers[<?= $q['id'] ?>]" value="<?= $opt ?>">
+                            <input type="radio" name="answers[<?= $q['id'] ?>]" value="<?= $opt ?>" data-index="<?= $index + 1 ?>">
                             <?= $opt ?>. <?= $q['option_' . strtolower($opt)] ?>
                         </label>
                     <?php endforeach; ?>
@@ -216,17 +216,17 @@ function startTimer() {
     }, 1000);
 }
 startTimer();
-
+let answers = {};
 document.querySelectorAll("input[type=radio]").forEach(radio => {
     radio.addEventListener("change", function() {
-        const questionId = this.name.match(/\d+/)[0]; // Lấy id của câu hỏi
+        const questionIndex = this.dataset.index;  // Lấy id của câu hỏi
         const selectedAnswer = this.value; // Lấy đáp án được chọn
 
         // Lưu đáp án vào đối tượng answers
-        answers[questionId] = selectedAnswer;
+        answers[questionIndex] = selectedAnswer;
 
         // Cập nhật đáp án đã chọn trong sidebar
-        updateSidebarAnswer(questionId, selectedAnswer);
+        updateSidebarAnswer(questionIndex, selectedAnswer);
     });
 });
 
@@ -238,6 +238,9 @@ function updateSidebarAnswer(questionId, selectedAnswer) {
     if (answerText) {
         // Hiển thị đáp án đã chọn trong sidebar
         answerText.textContent = ` (${selectedAnswer})`; 
+    }
+        if (sidebarLink) {
+        sidebarLink.style.color = 'gray'; // Đổi màu khi đã chọn đáp án
     }
 }
 
@@ -254,7 +257,7 @@ document.getElementById("examForm").addEventListener("submit", function(e) {
     const questions = document.querySelectorAll(".question-block");
     let unanswered = 0;
 
-    questions.forEach(q => {
+    questions.forEach(q => {    
         const radios = q.querySelectorAll("input[type=radio]");
         const checked = [...radios].some(r => r.checked);
         if (!checked) {
